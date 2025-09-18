@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container page-hero center">
+  <h1>{{ code }}</h1>
+  <p>{{ message }}</p>
+  <a class="btn btn-outline" href="{{ url_for('index') }}">Go Home</a>
+</section>
+{% endblock %}

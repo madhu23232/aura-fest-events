@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container page-hero">
+  <h1>Contact Us</h1>
+  <p>Send an enquiry and our team will reach you within 24 hours.</p>
+</section>
+<section class="container contact">
+  <form class="form-grid" id="enquiry-form" onsubmit="return sendEnquiry(event)">
+    <input type="text" name="name" placeholder="Your Name *" required>
+    <input type="email" name="email" placeholder="Email">
+    <input type="tel" name="phone" placeholder="Phone *" required>
+    <textarea name="message" rows="4" placeholder="Tell us about your event"></textarea>
+    <button class="btn btn-primary full" type="submit">Send Enquiry</button>
+  </form>
+</section>
+{% endblock %}

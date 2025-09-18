@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <h1>Make Your Moments <span class="grad">Unforgettable</span></h1>
+      <p>From intimate birthdays to grand weddings — Aura Fest Events crafts bespoke decorations that wow your guests.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#book">Book Your Event</a>
+        <a class="btn btn-outline" href="{{ url_for('gallery') }}">View Gallery</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="blob"></div>
+      <div class="photo-card">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container features">
+  <div class="feature">
+    <h3>Birthday Decor</h3>
+    <p>Trendy balloon arches, neon signs, and themed backdrops.</p>
+  </div>
+  <div class="feature">
+    <h3>Weddings</h3>
+    <p>Elegant mandaps, floral installations, and stage styling.</p>
+  </div>
+  <div class="feature">
+    <h3>Baby Shower</h3>
+    <p>Soft palettes, welcome boards, and cute centerpieces.</p>
+  </div>
+  <div class="feature">
+    <h3>Corporate</h3>
+    <p>Product launches, brand activations, and annual days.</p>
+  </div>
+</section>
+
+<section class="container showcase">
+  <h2>Popular Packages</h2>
+  <div class="cards">
+    <article class="card">
+      <h4>Classic Birthday</h4>
+      <p>Backdrop + balloon garland + cake table styling</p>
+      <div class="price">₹4,999</div>
+      <button class="btn btn-primary" onclick="prefillBooking('Birthday', 'Classic Birthday')">Book</button>
+    </article>
+    <article class="card">
+      <h4>Premium Baby Shower</h4>
+      <p>Backdrop + neon + welcome board + photo booth</p>
+      <div class="price">₹9,999</div>
+      <button class="btn btn-primary" onclick="prefillBooking('Baby Shower', 'Premium Baby Shower')">Book</button>
+    </article>
+    <article class="card">
+      <h4>Elegant Wedding Stage</h4>
+      <p>Floral arch + stage drapes + LED wash lights</p>
+      <div class="price">₹29,999</div>
+      <button class="btn btn-primary" onclick="prefillBooking('Wedding', 'Elegant Wedding Stage')">Book</button>
+    </article>
+  </div>
+</section>
+
+<section id="book" class="container booking">
+  <h2>Book Your Event</h2>
+  <form method="post" action="/api/book" class="form-grid" onsubmit="return validateBooking()">
+    <input type="text" name="name" placeholder="Your Name *" required>
+    <input type="email" name="email" placeholder="Email">
+    <input type="tel" name="phone" placeholder="Phone *" required>
+    <select name="event_type" id="event_type" required>
+      <option value="">Event Type *</option>
+      <option>Birthday</option>
+      <option>Baby Shower</option>
+      <option>Wedding</option>
+      <option>Corporate</option>
+      <option>Other</option>
+    </select>
+    <input type="date" name="date" required>
+    <input type="text" name="location" placeholder="City / Venue *" required>
+    <input type="text" name="budget" placeholder="Budget (₹)">
+    <textarea name="notes" id="notes" rows="4" placeholder="Notes"></textarea>
+    <button class="btn btn-primary full">Submit Booking</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+<form method="POST">
+    {%csrf_token() %}
+    <label for="token">Admin Token:</label>
+    <input type="password" name="token" required>
+    <button type="submit">Login</button>
+    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+</form>
+

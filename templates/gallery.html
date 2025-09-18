@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container page-hero">
+  <h1>Gallery</h1>
+  <p>A glimpse of our recent setups.</p>
+</section>
+<section class="container gallery">
+  {% if images %}
+    <div class="masonry">
+      {% for img in images %}
+        <img src="{{ img }}" alt="Aura Fest event setup">
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No images yet. Add your photos to <code>static/images/</code>.</p>
+  {% endif %}
+</section>
+{% endblock %}

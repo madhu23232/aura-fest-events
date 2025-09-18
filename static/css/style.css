@@ -1,0 +1,379 @@
+
+:root {
+  --bg: #0b0c10;
+  --panel: #111218;
+  --muted: #dadde5;
+  --text: #f2f4f8;
+  --accent: #8b5cf6;
+  --accent-2: #06b6d4;
+}
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+.container {
+  width: min(1100px, 90%);
+  margin-inline: auto;
+}
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(11,12,16,.7);
+  backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid #1d2030;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: .5px;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+nav a {
+  margin-left: 18px;
+  opacity: .9;
+}
+.btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid #2a2e3f;
+  background: #171a26;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: #2a2e3f;
+}
+.hero {
+  padding: 64px 0;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(139,92,246,.25), transparent),
+              radial-gradient(1000px 500px at 80% 10%, rgba(6,182,212,.25), transparent);
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin: 0 0 10px;
+}
+
+.grad {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cta .btn {
+  margin-right: 10px;
+}
+
+.badges span {
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 10px;
+  font-size: .9rem;
+  opacity: .8;
+}
+
+.hero-art {
+  position: relative;
+  height: 320px;
+}
+
+.blob {
+  position: absolute;
+  inset: -20px;
+  filter: blur(30px);
+  background: conic-gradient(from 90deg at 50% 50%, rgba(139,92,246,.45), rgba(6,182,212,.35), rgba(139,92,246,.45));
+  border-radius: 30px;
+}
+
+.photo-card {
+  position: absolute;
+  inset: 40px;
+  background: #0f111a;
+  border: 1px solid #23283e;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  opacity: .9;
+}
+
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 40px 0;
+}
+
+.feature {
+  background: var(--panel);
+  border: 1px solid #1d2030;
+  padding: 18px;
+  border-radius: 18px;
+}
+.showcase {
+  padding: 20px 0 50px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid #00ddff;
+  padding: 18px;
+  border-radius: 18px;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 8px 0 0;
+}
+
+
+.booking {
+  padding: 10px 0 60px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  background: #0f111a;
+  border: 1px solid #252948;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  width: 100%;
+}
+
+.form-grid textarea {
+  grid-column: span 2;
+  min-height: 120px;
+}
+
+.form-grid .full {
+  grid-column: span 2;
+}
+
+
+.page-hero {
+  padding: 40px 0 10px;
+}
+
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+
+.tick li {
+  margin: 8px 0;
+}
+
+
+.gallery .masonry {
+  columns: 3 260px;
+  column-gap: 12px;
+}
+
+.gallery img {
+  width: 100%;
+  border-radius: 12px;
+  margin: 0 0 12px;
+  border: 1px solid #1d2030;
+}
+
+
+.contact {
+  padding-bottom: 60px;
+}
+
+
+.table {
+  display: grid;
+  gap: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  background: #0e173f;
+  border: 1px solid #172367;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.row.head {
+  font-weight: 700;
+  background: #121526;
+}
+
+
+.site-footer {
+  margin-top: 60px;
+  border-top: 1px solid #1d2030;
+  padding: 30px 0;
+  background: #0f111a;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+}
+
+.center {
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .cards {
+    grid-template-columns: 1fr;
+  }
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-grid textarea,
+  .form-grid .full {
+    grid-column: span 1;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #000000; 
+    color: #fff; 
+}
+
+header, footer {
+    background-color: #111; 
+    color: #FFD700; 
+}
+
+nav a {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+button, .btn {
+    background-color: #FFD700;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 0 10px #FFD700;
+}
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease-in-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+nav a i, footer a i {
+    color: #FFD700; 
+    font-size: 20px;
+    margin-left: 10px;
+    transition: color 0.3s ease;
+}
+
+nav a i:hover, footer a i:hover {
+    color: #fff; 
+}
+.whatsapp-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25D366;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.1);
+}
+.photo-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 25px;
+  object-fit: cover;
+}
