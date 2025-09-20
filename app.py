@@ -20,10 +20,8 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret")
 
-# Enable CSRF protection globally
 csrf = CSRFProtect(app)
 
-# Set up login manager for admin authentication
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "admin_login"
