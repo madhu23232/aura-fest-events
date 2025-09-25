@@ -13,29 +13,30 @@
     <div class="hero-art">
       <div class="blob"></div>
       <div class="photo-card">
-        <img src="{{ url_for('static', filename='images/logo.jpg') }}">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Aura Fest Events">
+      
       </div>
     </div>
   </div>
 </section>
 
 <section class="container features">
-  <div class="feature">
+  <a class="feature" href="{{ url_for('birthday') }}">
     <h3>Birthday Decor</h3>
     <p>Trendy balloon arches, neon signs, and themed backdrops.</p>
-  </div>
-  <div class="feature">
+  </a>
+  <a class="feature" href="{{ url_for('wedding') }}">
     <h3>Weddings</h3>
     <p>Elegant mandaps, floral installations, and stage styling.</p>
-  </div>
-  <div class="feature">
+  </a>
+  <a class="feature" href="{{ url_for('babyshower') }}">
     <h3>Baby Shower</h3>
     <p>Soft palettes, welcome boards, and cute centerpieces.</p>
-  </div>
-  <div class="feature">
+  </a>
+  <a class="feature" href="{{ url_for('corprate') }}">
     <h3>Corporate</h3>
     <p>Product launches, brand activations, and annual days.</p>
-  </div>
+  </a>
 </section>
 
 <section class="container showcase">
@@ -83,4 +84,5 @@
     <button class="btn btn-primary full">Submit Booking</button>
   </form>
 </section>
+<a href="{{ url_for('index') }}">Home</a>
 {% endblock %}

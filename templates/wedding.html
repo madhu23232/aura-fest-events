@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wedding Decorations - Aura Fest Events</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <div class="brand">Aura <span>Fest</span></div>
+    <nav>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('gallery') }}">Gallery</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container service-page fade-in">
+  <h2>Wedding Decorations</h2>
+  <p>Choose from elegant mandaps, floral arches, stage styling, and premium lighting packages.</p>
+
+  <div class="cards">
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/wedding1.jpg') }}" alt="Wedding Mandap">
+      <h4>Traditional Mandap</h4>
+      <p>Classic setup with floral decor and stage drapes.</p>
+      <div class="price">₹25,000</div>
+    </div>
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/wedding2.jpg') }}" alt="Wedding Floral Arch">
+      <h4>Floral Arch Stage</h4>
+      <p>Modern arch with premium flowers and LED wash lights.</p>
+      <div class="price">₹35,000</div>
+    </div>
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/wedding3.jpg') }}" alt="Wedding Premium">
+      <h4>Luxury Wedding Package</h4>
+      <p>Mandap + Floral Installations + Stage + Lighting</p>
+      <div class="price">₹60,000</div>
+    </div>
+  </div>
+</section>
+
+<a href="{{ url_for('home') }}" class="btn">Go Back to Home</a>
+
+
+
+<a href="https://wa.me/917353631147" target="_blank" class="whatsapp-btn">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+</body>
+</html>
