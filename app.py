@@ -3,7 +3,7 @@ import sqlite3
 from datetime import datetime
 from flask import (
     Flask, render_template, request, redirect,
-    url_for, flash, jsonify
+    url_for, flash, jsonify, abort
 )
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_wtf import CSRFProtect
@@ -13,6 +13,10 @@ from flask_login import (
 )
 from flask_wtf.csrf import CSRFError
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+
+# Load env
+load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, "aura.db")
@@ -21,37 +25,72 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret")
 
+# ----------------- Admin API -----------------
+@app.get("/api/admin/data")
+@login_required
+def api_admin_data():
+    if not current_user.is_authenticated or str(current_user.get_id()) != "admin":
+        return jsonify({"ok": False, "error": "Forbidden"}), 403
+    data = {}
+    with sqlite3.connect(DB_PATH) as con:
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM enquiries ORDER BY created_at DESC")
+        data["enquiries"] = [dict(x) for x in cur.fetchall()]
+        cur.execute("SELECT * FROM bookings ORDER BY created_at DESC")
+        data["bookings"] = [dict(x) for x in cur.fetchall()]
+    return jsonify({"ok": True, "data": data})
+
 csrf = CSRFProtect(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+
+# ----------------- User classes -----------------
 class User(UserMixin):
     def __init__(self, id, email_phone):
-        self.id = id
+        self.id = str(id)
         self.email_phone = email_phone
 
+
+class Admin(UserMixin):
+    def __init__(self, id="admin"):
+        self.id = str(id)
+
+
+# ----------------- User loader -----------------
 @login_manager.user_loader
 def load_user(user_id):
-    with sqlite3.connect(DB_PATH) as con:
-        con.row_factory = sqlite3.Row
-        cur = con.cursor()
-        cur.execute("SELECT id, email_phone FROM users WHERE id=?", (user_id,))
-        row = cur.fetchone()
-        if row:
-            return User(id=row["id"], email_phone=row["email_phone"])
+    # Admin special-case
+    if str(user_id) == "admin":
+        return Admin(id="admin")
+
+    # Normal user: load from DB
+    try:
+        with sqlite3.connect(DB_PATH) as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute("SELECT id, email_phone FROM users WHERE id=?", (user_id,))
+            row = cur.fetchone()
+            if row:
+                return User(id=row["id"], email_phone=row["email_phone"])
+    except Exception:
+        pass
     return None
 
 
+# ----------------- Context processor -----------------
 @app.context_processor
 def inject_now():
     return {"year": datetime.now().year}
 
 
+# ----------------- Public pages -----------------
 @app.route("/")
 def index():
-    return render_template("index.html", title="Aura Fest Events | Premium Event Decoration")
+    return render_template("index.html")
 
 
 @app.route("/services")
@@ -75,9 +114,10 @@ def contact():
     return render_template("contact.html", title="Contact — Aura Fest Events")
 
 
+# ----------------- API endpoints -----------------
 @app.post("/api/enquiry")
 def api_enquiry():
-    data = request.form if request.form else request.json    
+    data = request.form if request.form else request.json
     name = (data.get("name") or "").strip()
     email = (data.get("email") or "").strip()
     phone = (data.get("phone") or "").strip()
@@ -122,6 +162,7 @@ def booking_success():
     return render_template("booking_success.html", title="Booking Received — Aura Fest Events")
 
 
+# ----------------- Event pages -----------------
 @app.route("/wedding")
 def wedding():
     return render_template("wedding.html", title="Wedding Decorations")
@@ -142,58 +183,70 @@ def corprate():
     return render_template("corprate.html", title="Corporate Events")
 
 
+# ----------------- Signup / Login / Logout -----------------
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    error = None
     if request.method == "POST":
-        email_phone = request.form.get("email_phone").strip()
-        password = request.form.get("password").strip()
-        if not (email_phone and password):
-            flash("Email/Phone and Password required!", "danger")
-            return redirect(url_for("signup"))
-
+        name = request.form.get("name")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        password = request.form.get("password")
+        email_phone = email if email else phone
         hashed_pw = generate_password_hash(password)
-
-        with sqlite3.connect(DB_PATH) as con:
-            cur = con.cursor()
-            try:
+        try:
+            with sqlite3.connect(DB_PATH) as con:
+                cur = con.cursor()
                 cur.execute(
-                    "INSERT INTO users(email_phone, password) VALUES (?, ?)",
-                    (email_phone, hashed_pw),
+                    "INSERT INTO users (email_phone, password) VALUES (?, ?)",
+                    (email_phone, hashed_pw)
                 )
                 con.commit()
-            except sqlite3.IntegrityError:
-                flash("Account already exists!", "warning")
-                return redirect(url_for("signup"))
+            # AJAX support: return JSON if X-Requested-With is set
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"ok": True, "name": name})
+            return render_template("signup_success.html", name=name)
+        except sqlite3.IntegrityError:
+            error = "Email or phone already registered."
+        except Exception:
+            error = "Signup failed. Please try again."
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({"ok": False, "error": error}), 400
+    return render_template("signup.html", error=error)
 
-        flash("Account created! Please login.", "success")
-        return redirect(url_for("login"))
-
-    return render_template("signup.html", title="Signup — Aura Fest Events")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
     if request.method == "POST":
-        email = request.form.get("email")
+        email_phone = request.form.get("email")
         password = request.form.get("password")
-
-        if email == "test@test.com" and password == "1234":
-            flash("Logged in successfully!", "success")
-            return redirect(url_for("index"))
-        else:
-            flash("Invalid email/phone or password", "danger")
-            return redirect(url_for("login"))
-
-    return render_template("login.html")
-
+        with sqlite3.connect(DB_PATH) as con:
+            cur = con.cursor()
+            cur.execute("SELECT id, password FROM users WHERE email_phone = ?", (email_phone,))
+            user = cur.fetchone()
+            if user and check_password_hash(user[1], password):
+                login_user(User(id=user[0], email_phone=email_phone))
+                return render_template("login_success.html", name=email_phone)
+            else:
+                error = "Invalid credentials. Please try again."
+    return render_template("login.html", error=error)
 
 
 @app.route("/dashboard")
 @login_required
 def user_dashboard():
+    # Only normal users should hit this; admin will be redirected below.
+    if getattr(current_user, "id", None) == "admin":
+        # Prevent admin from viewing user dashboard; redirect to admin dashboard
+        return redirect(url_for("admin_dashboard"))
+
+    # Search bookings by email or phone
     with sqlite3.connect(DB_PATH) as con:
         con.row_factory = sqlite3.Row
         cur = con.cursor()
-        cur.execute("SELECT * FROM bookings WHERE email=? OR phone=?", 
+        # current_user.email_phone might be an email or phone string
+        cur.execute("SELECT * FROM bookings WHERE email=? OR phone=? ORDER BY date DESC",
                     (current_user.email_phone, current_user.email_phone))
         bookings = [dict(x) for x in cur.fetchall()]
 
@@ -208,27 +261,30 @@ def logout():
     return redirect(url_for("login"))
 
 
-
-class Admin(UserMixin):
-    def __init__(self, id):
-        self.id = id
-
+# ----------------- Admin -----------------
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
     error = None
     if request.method == "POST":
         token = request.form.get("token")
-        if token == os.getenv("ADMIN_TOKEN"):
+        if token and token == os.getenv("ADMIN_TOKEN"):
             user = Admin(id="admin")
-            login_user(user)
+            login_user(user, remember=True)
             return redirect(url_for("admin_dashboard"))
         else:
             error = "Invalid token"
     return render_template("admin_login.html", error=error)
 
+
+def _require_admin():
+    if not current_user.is_authenticated or str(current_user.get_id()) != "admin":
+        abort(403)
+
+
 @app.route("/admin")
 @login_required
 def admin_dashboard():
+    _require_admin()
     data = {}
     with sqlite3.connect(DB_PATH) as con:
         con.row_factory = sqlite3.Row
@@ -240,14 +296,33 @@ def admin_dashboard():
     return render_template("admin.html", title="Admin — Aura Fest Events", data=data)
 
 
+@app.route("/admin/bookings")
+@login_required
+def admin_bookings():
+    _require_admin()
+    bookings = []
+    with sqlite3.connect(DB_PATH) as con:
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+        cur.execute("""
+            SELECT name, email, phone, event_type, date, location, budget, notes, created_at
+            FROM bookings
+            ORDER BY date DESC
+        """)
+        bookings = [dict(x) for x in cur.fetchall()]
+    return render_template("admin_bookings.html", bookings=bookings)
 
+
+# ----------------- Error handlers -----------------
 @app.errorhandler(403)
 def forbidden(e):
     return render_template("error.html", title="Forbidden", code=403, message="Forbidden"), 403
 
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template("error.html", title="Not found", code=404, message="Page not found"), 404
+
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
@@ -255,22 +330,19 @@ def handle_csrf_error(e):
     return redirect(request.referrer or url_for("index"))
 
 
-
+# ----------------- DB init -----------------
 def init_db():
     with sqlite3.connect(DB_PATH) as con:
         cur = con.cursor()
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS enquiries(
+            CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                email TEXT,
-                phone TEXT NOT NULL,
-                message TEXT,
-                created_at TEXT NOT NULL
+                email_phone TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
             );
         """)
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS bookings(
+            CREATE TABLE IF NOT EXISTS bookings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 email TEXT,
@@ -284,17 +356,19 @@ def init_db():
             );
         """)
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS users(
+            CREATE TABLE IF NOT EXISTS enquiries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email_phone TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL
+                name TEXT NOT NULL,
+                email TEXT,
+                phone TEXT NOT NULL,
+                message TEXT,
+                created_at TEXT NOT NULL
             );
         """)
         con.commit()
 
 
+# ----------------- Run -----------------
 if __name__ == "__main__":
-    from dotenv import load_dotenv
-    load_dotenv()
     init_db()
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)), debug=False)

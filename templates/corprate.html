@@ -20,37 +20,38 @@
   </div>
 </header>
 
+{% extends "base.html" %}
+{% block content %}
 <section class="container service-page fade-in">
   <h2>Corporate Event Decorations</h2>
   <p>Professional setups for product launches, annual days, conferences, and brand activations.</p>
-
   <div class="cards">
     <div class="card">
-      <img src="images/logo.jpg" alt="Corporate Launch">
+      <img src="{{ url_for('static', filename='images/corp1.jpg') }}" alt="Corporate Launch">
       <h4>Product Launch</h4>
       <p>Stage backdrop + lighting + branding elements</p>
       <div class="price">₹19,999</div>
     </div>
     <div class="card">
-      <img src="images/corp2.jpg" alt="Corporate Annual Day">
+      <img src="{{ url_for('static', filename='images/corp2.jpg') }}" alt="Corporate Annual Day">
       <h4>Annual Day Setup</h4>
       <p>Stage decor + LED lighting + audio-visual setup</p>
       <div class="price">₹29,999</div>
     </div>
     <div class="card">
-      <img src="images/corp3.jpg" alt="Corporate Premium">
+      <img src="{{ url_for('static', filename='images/corp3.jpg') }}" alt="Corporate Premium">
       <h4>Premium Corporate Event</h4>
       <p>Stage + branding + seating decor + lighting package</p>
       <div class="price">₹49,999</div>
     </div>
   </div>
+  <a href="{{ url_for('index') }}" class="btn btn-outline" style="margin:20px;">← Back to Home</a>
+  <a href="https://wa.me/917353631147" target="_blank" class="whatsapp-btn">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 </section>
+{% endblock %}
 
-<a href="index.html" class="btn btn-outline" style="margin:20px;">← Back to Home</a>
-
-<a href="https://wa.me/917353631147" target="_blank" class="whatsapp-btn">
-  <i class="fab fa-whatsapp"></i>
-</a>
 <script src="https://kit.fontawesome.com/a2e0e6adad.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -9,21 +9,11 @@
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container nav">
-    <div class="brand">Aura <span>Fest</span></div>
-    <nav>
-      <a href="{{ url_for('index') }}">Home</a>
-      <a href="{{ url_for('gallery') }}">Gallery</a>
-      <a href="{{ url_for('contact') }}">Contact</a>
-    </nav>
-  </div>
-</header>
-
+{% extends "base.html" %}
+{% block content %}
 <section class="container service-page fade-in">
   <h2>Birthday Decorations</h2>
   <p>Celebrate birthdays with stunning themes, balloon arches, neon lights, and backdrops tailored to your choice.</p>
-
   <div class="cards">
     <div class="card">
       <img src="{{ url_for('static', filename='images/birthday1.jpg') }}" alt="Birthday Classic">
@@ -31,14 +21,12 @@
       <p>Backdrop + balloon garland + cake table styling</p>
       <div class="price">₹4,999</div>
     </div>
-
     <div class="card">
       <img src="{{ url_for('static', filename='images/birthday2.jpg') }}" alt="Birthday Neon">
       <h4>Neon Theme</h4>
       <p>Backdrop + neon sign + balloon arch</p>
       <div class="price">₹7,999</div>
     </div>
-
     <div class="card">
       <img src="{{ url_for('static', filename='images/birthday3.jpg') }}" alt="Birthday Premium">
       <h4>Premium Theme Party</h4>
@@ -46,13 +34,12 @@
       <div class="price">₹12,999</div>
     </div>
   </div>
+  <a href="{{ url_for('index') }}" class="btn btn-outline" style="margin:20px;">← Back to Home</a>
+  <a href="https://wa.me/917353631147" target="_blank" class="whatsapp-btn">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 </section>
-
-<a href="{{ url_for('index') }}" class="btn btn-outline" style="margin:20px;">← Back to Home</a>
-
-<a href="https://wa.me/917353631147" target="_blank" class="whatsapp-btn">
-  <i class="fab fa-whatsapp"></i>
-</a>
+{% endblock %}
 
 <script src="https://kit.fontawesome.com/a2e0e6adad.js" crossorigin="anonymous"></script>
 </body>

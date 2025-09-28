@@ -1,0 +1,112 @@
+.login-section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #18181c;
+}
+
+.login-container {
+  background: #23232a;
+  border-radius: 24px 8px 24px 8px;
+  box-shadow: 0 6px 32px rgba(60, 60, 120, 0.12);
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -60px;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #8b5cf6 60%, #FFD700 100%);
+  opacity: 0.13;
+  transform: rotate(15deg);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #FFD700;
+  letter-spacing: 1px;
+}
+
+.login-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.login-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #FFD700;
+  letter-spacing: 0.5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #353545;
+  border-radius: 10px;
+  background: #292933;
+  font-size: 1rem;
+  color: #FFD700;
+  transition: border-color 0.3s, background 0.3s;
+  outline: none;
+}
+
+.login-form input:focus {
+  border-color: #8b5cf6;
+  background: #23232a;
+}
+
+.btn {
+  width: 25%;
+  padding: 0.8rem 0;
+  background: #4514b8;
+  color: #fff;
+  font-weight: 700;
+  border: 100%;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(38, 27, 187, 0.08);
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.btn:hover, .btn:focus {
+  background: #13a8d1;
+  color: #23232a;
+}
+
+.login-section a {
+  color: #8b5cf6;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.login-section a:hover {
+  color: #FFD700;
+}
+
+@media (max-width: 500px) {
+  .login-container {
+    padding: 1.2rem 0.5rem;
+    max-width: 95vw;
+  }
+  .login-title {
+    font-size: 1.3rem;
+  }
+}

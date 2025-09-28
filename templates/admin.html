@@ -1,1 +1,51 @@
-<h1>Admin Dashboard</h1>
+{% extends "base.html" %}
+{% block content %}
+<section class="container" style="max-width:800px; margin:40px auto;">
+	<h1>Admin Dashboard</h1>
+	<div style="margin-bottom:30px;">
+		<a class="btn btn-primary" href="{{ url_for('admin_bookings') }}">View All Bookings</a>
+		<a class="btn btn-outline" href="{{ url_for('admin_dashboard') }}">View All Enquiries</a>
+		<a class="btn btn-outline" href="/api/admin/data" target="_blank">View Data (API)</a>
+		<a class="btn" href="{{ url_for('logout') }}">Logout</a>
+	</div>
+	<h3>Quick Stats</h3>
+	<ul>
+		<li>Total Bookings: {{ data.bookings|length }}</li>
+		<li>Total Enquiries: {{ data.enquiries|length }}</li>
+	</ul>
+	<h3>Recent Bookings</h3>
+	<table style="width:100%;">
+		<tr>
+			<th>Name</th><th>Email</th><th>Phone</th><th>Event Type</th><th>Date</th><th>Location</th><th>Budget</th><th>Notes</th><th>Created At</th>
+		</tr>
+		{% for b in data.bookings[:5] %}
+		<tr>
+			<td>{{ b.name }}</td>
+			<td>{{ b.email }}</td>
+			<td>{{ b.phone }}</td>
+			<td>{{ b.event_type }}</td>
+			<td>{{ b.date }}</td>
+			<td>{{ b.location }}</td>
+			<td>{{ b.budget }}</td>
+			<td>{{ b.notes }}</td>
+			<td>{{ b.created_at }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<h3>Recent Enquiries</h3>
+	<table style="width:100%;">
+		<tr>
+			<th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Created At</th>
+		</tr>
+		{% for e in data.enquiries[:5] %}
+		<tr>
+			<td>{{ e.name }}</td>
+			<td>{{ e.email }}</td>
+			<td>{{ e.phone }}</td>
+			<td>{{ e.message }}</td>
+			<td>{{ e.created_at }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</section>
+{% endblock %}

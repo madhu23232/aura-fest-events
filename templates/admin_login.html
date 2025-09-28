@@ -1,7 +1,22 @@
-<form method="POST">
-    {{ csrf_token() }}
-    <label for="token">Admin Token:</label>
-    <input type="password" name="token" required>
-    <button type="submit">Login</button>
-    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
-</form>
+{% extends "base.html" %}
+{% block content %}
+<h2>Event Bookings</h2>
+<table>
+  <tr>
+    <th>Name</th><th>Email</th><th>Phone</th><th>Event Type</th><th>Date</th><th>Location</th><th>Budget</th><th>Notes</th><th>Created At</th>
+  </tr>
+  {% for b in bookings %}
+  <tr>
+    <td>{{ b[0] }}</td>
+    <td>{{ b[1] }}</td>
+    <td>{{ b[2] }}</td>
+    <td>{{ b[3] }}</td>
+    <td>{{ b[4] }}</td>
+    <td>{{ b[5] }}</td>
+    <td>{{ b[6] }}</td>
+    <td>{{ b[7] }}</td>
+    <td>{{ b[8] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

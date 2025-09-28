@@ -1,3 +1,4 @@
+
 :root {
   --bg: #0b0c10;
   --panel: #111218;
@@ -21,6 +22,7 @@ html, body {
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.3s;
 }
 .container {
   width: min(1100px, 90%);
@@ -127,7 +129,7 @@ nav a {
 
 .photo-card {
   position: absolute;
-  inset: 40px;
+  inset: 20px;
   background: #0f111a;
   border: 1px solid #23283e;
   border-radius: 40px;
@@ -461,6 +463,3 @@ nav a i:hover, footer a i:hover {
     padding: 6px;
   }
 }
-
-
-
