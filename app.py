@@ -194,6 +194,7 @@ def signup():
         password = request.form.get("password")
         email_phone = email if email else phone
         hashed_pw = generate_password_hash(password)
+        error = None
         try:
             with sqlite3.connect(DB_PATH) as con:
                 cur = con.cursor()
@@ -202,16 +203,19 @@ def signup():
                     (email_phone, hashed_pw)
                 )
                 con.commit()
-            # AJAX support: return JSON if X-Requested-With is set
-            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                return jsonify({"ok": True, "name": name})
-            return render_template("signup_success.html", name=name)
         except sqlite3.IntegrityError:
             error = "Email or phone already registered."
         except Exception:
             error = "Signup failed. Please try again."
+        # Always return JSON for AJAX requests, no redirect
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-            return jsonify({"ok": False, "error": error}), 400
+            if error:
+                return jsonify({"ok": False, "error": error}), 400
+            return jsonify({"ok": True, "name": name}), 200
+        # Fallback for normal form POST (redirect)
+        if error:
+            return render_template("signup.html", error=error)
+        return redirect(url_for("login"))
     return render_template("signup.html", error=error)
 
 

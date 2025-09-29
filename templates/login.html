@@ -14,20 +14,24 @@ document.addEventListener('DOMContentLoaded', function() {
       method: 'POST',
       body: fd
     });
-    const html = await res.text();
-   
-    if (html.includes('Login Successful!') || html.includes('Welcome back')) {
-     
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      // fallback to HTML if not JSON
+      const html = await res.text();
+      document.querySelector('.login-container').innerHTML = html;
+      return;
+    }
+    if (data.ok) {
       localStorage.setItem('user', fd.get('email'));
-      
       if (fd.get('email') === 'admin') {
         window.location.href = "{{ url_for('admin_dashboard') }}";
       } else {
         window.location.href = "{{ url_for('index') }}";
       }
     } else {
-
-      document.querySelector('.login-container').innerHTML = html;
+      document.querySelector('.login-container').innerHTML = `<div style='color:red;text-align:center;'>${data.error || 'Login failed.'}</div>` + document.querySelector('.login-container').innerHTML;
     }
   });
 });

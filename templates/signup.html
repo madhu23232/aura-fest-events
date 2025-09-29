@@ -3,37 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('.login-form');
-  if (!form) return;
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const fd = new FormData(form);
-    const res = await fetch("{{ url_for('signup') }}", {
-      method: 'POST',
-      body: fd
-    });
-    let data;
-    try {
-      data = await res.json();
-    } catch {
-      // fallback to HTML if not JSON
-      const html = await res.text();
-      document.querySelector('.login-container').innerHTML = html;
-      return;
-    }
-    if (data.ok) {
-      localStorage.setItem('user', fd.get('email'));
-      alert('Signup successful! Please login to continue.');
-      window.location.href = "{{ url_for('login') }}";
-    } else {
-      // Show error message
-      document.querySelector('.login-container').innerHTML = `<div style='color:red;text-align:center;'>${data.error || 'Signup failed.'}</div>` + document.querySelector('.login-container').innerHTML;
-    }
-  });
-});
-</script>
+<!-- No JS: use normal form POST for signup -->
 {% endblock %}
 {% block content %}
 <section class="login-section">
